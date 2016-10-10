@@ -10,9 +10,9 @@ import CoreFoundation
 
 public struct Benchmark {
 
-    private let startTimeInterval: CFAbsoluteTime
-    private let key: String
-    private static var sharedInstance: Benchmark?
+    fileprivate let startTimeInterval: CFAbsoluteTime
+    fileprivate let key: String
+    fileprivate static var sharedInstance: Benchmark?
 
     public init(key: String) {
         startTimeInterval = CFAbsoluteTimeGetCurrent()
@@ -25,7 +25,7 @@ public struct Benchmark {
         print("\(key): \(formatedElapsed) sec.")
     }
 
-    public static func start(key: String = "Benchmark") {
+    public static func start(_ key: String = "Benchmark") {
         sharedInstance = Benchmark(key: key)
     }
 
@@ -34,14 +34,14 @@ public struct Benchmark {
         sharedInstance = nil
     }
 
-    public static func measure(key: String = "Benchmark", @noescape block: Void -> Void) {
+    public static func measure(_ key: String = "Benchmark", block: (Void) -> Void) {
         let benchmark = Benchmark(key: key)
         block()
         benchmark.finish()
     }
 }
 
-prefix operator ⏲ { }
-public prefix func ⏲(@noescape handler: Void -> Void) {
+prefix operator ⏲
+public prefix func ⏲(handler: (Void) -> Void) {
     Benchmark.measure(block: handler)
 }
